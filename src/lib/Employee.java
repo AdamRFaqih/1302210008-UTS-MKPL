@@ -13,26 +13,18 @@ public class Employee {
 	private String idNumber;
 	private String address;
 	private Gender gender;
-	
-
+	private Family spouse;
+	private List<Family> childrens;
 	private LocalDate joinedDate;
 	private int monthWorkingInYear;
-	
 	private boolean isForeigner;
 	private enum Gender {
 		MALE,
 		FEMALE;
 	}
-
 	private int monthlySalary;
 	private int otherMonthlyIncome;
 	private int annualDeductible;
-	
-	private String spouseName;
-	private String spouseIdNumber;
-
-	private List<String> childNames;
-	private List<String> childIdNumbers;
 	
 	public Employee(String employeeId, String firstName, String lastName, String idNumber, String address, LocalDate joinedDate, boolean isForeigner, Gender gender) {
 		this.employeeId = employeeId;
@@ -43,9 +35,7 @@ public class Employee {
 		this.joinedDate = joinedDate;
 		this.isForeigner = isForeigner;
 		this.gender = gender;
-		
-		childNames = new LinkedList<String>();
-		childIdNumbers = new LinkedList<String>();
+		this.childrens = new LinkedList<>();
 	}
 	
 	public void setMonthlySalary(int grade) {
@@ -74,13 +64,11 @@ public class Employee {
 	}
 	
 	public void setSpouse(String spouseName, String spouseIdNumber) {
-		this.spouseName = spouseName;
-		this.spouseIdNumber = idNumber;
+		this.spouse = new Family(spouseName, spouseIdNumber);
 	}
 	
 	public void addChild(String childName, String childIdNumber) {
-		childNames.add(childName);
-		childIdNumbers.add(childIdNumber);
+		this.childrens.add(new Family(childName, childIdNumber));
 	}
 	
 	public int getAnnualIncomeTax() {
@@ -90,6 +78,6 @@ public class Employee {
 		}else {
 			monthWorkingInYear = 12;
 		}
-		return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible, spouseIdNumber.equals(""), childIdNumbers.size());
+		return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible, spouse.getId().equals(""), childrens.size());
 	}
 }
