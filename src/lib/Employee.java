@@ -13,9 +13,8 @@ public class Employee {
 	private String idNumber;
 	private String address;
 	
-	private int yearJoined;
-	private int monthJoined;
-	private int dayJoined;
+
+	private LocalDate joinedDate;
 	private int monthWorkingInYear;
 	
 	private boolean isForeigner;
