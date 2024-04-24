@@ -12,6 +12,7 @@ public class Employee {
 	private String lastName;
 	private String idNumber;
 	private String address;
+	private Gender gender;
 	
 
 	private LocalDate joinedDate;
@@ -33,7 +34,7 @@ public class Employee {
 	private List<String> childNames;
 	private List<String> childIdNumbers;
 	
-	public Employee(String employeeId, String firstName, String lastName, String idNumber, String address, LocalDate joinedDate, boolean isForeigner, boolean gender) {
+	public Employee(String employeeId, String firstName, String lastName, String idNumber, String address, LocalDate joinedDate, boolean isForeigner, Gender gender) {
 		this.employeeId = employeeId;
 		this.firstName = firstName;
 		this.lastName = lastName;
