@@ -2,7 +2,12 @@ package lib;
 
 public class TaxFunction {
 
-	
+	private static final int MONTHS_PER_YEAR = 12;
+	private static final int MAX_CHILDREN_DEDUCTION = 3;
+	private static final int SINGLE_TAX_DEDUCTION = 54_000_000;
+	private static final int MARRIED_TAX_DEDUCTION = 4_500_000;
+	private static final int CHILD_TAX_DEDUCTION = 1_500_000;
+	private static final double TAX_RATE = 0.05;
 	/**
 	 * Fungsi untuk menghitung jumlah pajak penghasilan pegawai yang harus dibayarkan setahun.
 	 * 
@@ -16,29 +21,35 @@ public class TaxFunction {
 	
 	
 	public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
-		
-		int tax = 0;
-		
-		if (numberOfMonthWorking > 12) {
+		inputValidation(monthlySalary, otherMonthlyIncome, numberOfMonthWorking, deductible, numberOfChildren);
+		int annualIncome = getAnnualIncome(monthlySalary, otherMonthlyIncome, numberOfMonthWorking);
+		int taxable = getTaxable(annualIncome, deductible, isMarried, numberOfChildren);
+		return taxable > 0 ? (int) (taxable * TAX_RATE) : 0;
+	}
+
+	public static void inputValidation(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, int numberOfChildren){
+		if (monthlySalary < 0 || otherMonthlyIncome < 0 || numberOfMonthWorking < 0 || deductible < 0 || numberOfChildren < 0) {
+			System.err.println("Input must be positive number");
+		}
+		if (numberOfMonthWorking > MONTHS_PER_YEAR) {
 			System.err.println("More than 12 month working per year");
 		}
-		
-		if (numberOfChildren > 3) {
-			numberOfChildren = 3;
-		}
-		
+	}
+
+	public static int getAnnualIncome(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking) {
+		return (monthlySalary + otherMonthlyIncome) * numberOfMonthWorking;
+	}
+
+	private static int getTaxable(int annualIncome, int deductible, boolean isMarried, int numberOfChildren) {
+		int taxable = annualIncome - deductible;
 		if (isMarried) {
-			tax = (int) Math.round(0.05 * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - (54000000 + 4500000 + (numberOfChildren * 1500000))));
+			taxable -= MARRIED_TAX_DEDUCTION;
 		}else {
-			tax = (int) Math.round(0.05 * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - 54000000));
+			taxable -= SINGLE_TAX_DEDUCTION;
 		}
-		
-		if (tax < 0) {
-			return 0;
-		}else {
-			return tax;
-		}
-			 
+		int childDeduction = Math.min(numberOfChildren, MAX_CHILDREN_DEDUCTION);
+		taxable -= childDeduction * CHILD_TAX_DEDUCTION;
+		return taxable;
 	}
 	
 }
